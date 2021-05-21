@@ -85,7 +85,9 @@ it('can add the star name and star symbol properly', async() => {
     let balance = web3.utils.toWei(".05", "ether");
     await instance.createStar('awesome star', starId, {from: user1});
     const symbol = await instance.symbol({from: user1});
+    const name = await instance.name({from: user1});
     assert.equal(symbol, "STR");
+    assert.equal(name, "STAR");
 });
 
 it('lets 2 users exchange stars', async() => {
@@ -98,11 +100,11 @@ it('lets 2 users exchange stars', async() => {
     let starId1 = 7;
     let starId2 = 8;
     await instance.createStar('awesome star', starId1, {from: user1});
-    await instance.createStar('awesome star', starId2, {from: user1});
+    await instance.createStar('awesome star', starId2, {from: user2});
     await instance.exchangeStars(starId1, starId2, {from: user1});
     let owner1 = await instance.ownerOf(starId1, {from: user1});
-    let owner2 = await instance.ownerOf(starId2, {from: user1});
-    assert(owner1, owner2);
+    let owner2 = await instance.ownerOf(starId2, {from: user2});
+    assert(owner1==user2 && owner2==user1);
 });
 
 it('lets a user transfer a star', async() => {
